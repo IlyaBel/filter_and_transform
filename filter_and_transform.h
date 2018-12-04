@@ -75,15 +75,15 @@ public:
      friend class FilterIterator<Container, Predicate>;
 };
 
-template <class Container, class Predicate>
+template <class Container, class F>
 class TransformIterator {
 private:
-    const TransformView<Container,Predicate>& view_;
+    const TransformView<Container,F>& view_;
     using Iterator = decltype(std::begin(std::declval<Container>()));
     Iterator value_;
 
 public:
-    TransformIterator(const TransformView<Container,Predicate>& view_0, Iterator value_0) :
+    TransformIterator(const TransformView<Container,F>& view_0, Iterator value_0) :
         view_(view_0), value_(value_0) {}
 
     auto operator * () const {
@@ -110,14 +110,14 @@ public:
     }
 };
 
-template <class Container, class Predicate>
+template <class Container, class F>
 class TransformView {
 private:
     const Container& cont_;
-    const Predicate pred_;
+    const F pred_;
 
 public:
-    TransformView(const Container& cont_0, const Predicate& pred_0) :
+    TransformView(const Container& cont_0, const F& pred_0) :
         cont_(cont_0), pred_(pred_0) {}
 
     auto begin() const{
@@ -128,7 +128,7 @@ public:
         return TransformIterator(*this, std::end(cont_));
     }
 
-    friend class TransformIterator<Container, Predicate>;
+    friend class TransformIterator<Container, F>;
 };
 
 #endif // FILTER_AND_TRANSFORM_H
